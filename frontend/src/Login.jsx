@@ -63,6 +63,11 @@ export default function Login() {
           Login
         </button>
       </form>
+      <button
+        onClick={() => navigate('/password-reset')}
+        className='mt-4 text-blue-500 text-center w-full'>
+        Forgot password?
+      </button>
     </div>
   );
 }

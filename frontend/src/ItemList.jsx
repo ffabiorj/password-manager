@@ -128,7 +128,7 @@ export default function ItemList() {
         )}
 
         {/* Pagination Controls */}
-        <div className='flex justify-center mt-4 space-x-2'>
+        {/*      <div className='flex justify-center mt-4 space-x-2'>
           <button
             className={`px-3 py-1 rounded-md ${
               currentPage === 1 ? 'bg-gray-300' : 'bg-gray-700 text-white'
@@ -150,7 +150,7 @@ export default function ItemList() {
             disabled={currentPage === totalPages}>
             Next
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

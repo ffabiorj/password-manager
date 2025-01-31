@@ -4,6 +4,7 @@ import ItemList from './ItemList';
 import EditItem from './EditItem';
 import Register from './Register';
 import Home from './Home';
+import PasswordResetRequest from './PasswordResetRequest';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path='/register' element={<Register />} />
         <Route path='/items' element={<ItemList />} />
         <Route path='/edit/:id' element={<EditItem />} />
+        <Route path='/password-reset' element={<PasswordResetRequest />} />
       </Routes>
     </Router>
   );
