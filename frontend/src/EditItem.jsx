@@ -1,33 +1,33 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 
 export default function EditItem() {
   const { id } = useParams(); // Get item ID from URL
   const navigate = useNavigate();
 
   const [item, setItem] = useState({
-    name: "",
-    icon: "",
-    notes: "",
-    url: "",
-    username: "",
-    password: "",
+    name: '',
+    icon: '',
+    notes: '',
+    url: '',
+    username: '',
+    password: '',
   });
 
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
   // Fetch item data on mount
   useEffect(() => {
-    fetch(`http://localhost:8000/api/v1/password/${id}/`, {
-      method: "GET",
+    fetch(`https://whale-app-mp29g.ondigitalocean.app/api/v1/password/${id}/`, {
+      method: 'GET',
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`, // Ensure authentication
+        Authorization: `Bearer ${localStorage.getItem('token')}`, // Ensure authentication
       },
     })
       .then((res) => res.json())
       .then((data) => setItem(data))
-      .catch(() => setError("Failed to load item"));
+      .catch(() => setError('Failed to load item'));
   }, [id]);
 
   // Handle form submission
@@ -36,103 +36,105 @@ export default function EditItem() {
 
     try {
       const response = await fetch(
-        `http://localhost:8000/api/v1/password/${id}/`,
+        `https://whale-app-mp29g.ondigitalocean.app/api/v1/password/${id}/`,
         {
-          method: "PUT",
+          method: 'PUT',
           headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`, // Auth token
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`, // Auth token
           },
           body: JSON.stringify(item),
-        },
+        }
       );
 
       if (response.ok) {
         setSuccess(true);
-        setTimeout(() => navigate("/items"), 2000); // Redirect after 2 seconds
+        setTimeout(() => navigate('/items'), 2000); // Redirect after 2 seconds
       } else {
-        setError("Failed to update item.");
+        setError('Failed to update item.');
       }
     } catch {
-      setError("Something went wrong.");
+      setError('Something went wrong.');
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-        <h2 className="text-2xl font-bold text-center mb-4">Edit Item</h2>
+    <div className='min-h-screen flex items-center justify-center bg-gray-100'>
+      <div className='bg-white p-6 rounded-lg shadow-lg w-96'>
+        <h2 className='text-2xl font-bold text-center mb-4'>Edit Item</h2>
 
         {success && (
-          <p className="text-green-600 text-center">✅ Updated successfully!</p>
+          <p className='text-green-600 text-center'>✅ Updated successfully!</p>
         )}
-        {error && <p className="text-red-500 text-center">{error}</p>}
+        {error && <p className='text-red-500 text-center'>{error}</p>}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form
+          onSubmit={handleSubmit}
+          className='space-y-4'
+          style={{ width: 300, display: 'flex', flexDirection: 'column' }}>
+          <label htmlFor=''> name</label>
           <input
-            type="text"
-            placeholder="Name"
-            className="w-full px-4 py-2 border rounded-md"
+            type='text'
+            placeholder='Name'
+            className='w-full px-4 py-2 border rounded-md'
             value={item.name}
             onChange={(e) => setItem({ ...item, name: e.target.value })}
             required
           />
-
+          <label htmlFor=''> Icon</label>
           <input
-            type="text"
-            placeholder="Icon"
-            className="w-full px-4 py-2 border rounded-md"
+            type='text'
+            placeholder='Icon'
+            className='w-full px-4 py-2 border rounded-md'
             value={item.icon}
             onChange={(e) => setItem({ ...item, icon: e.target.value })}
           />
-
+          <label htmlFor=''> Notes</label>
           <textarea
-            placeholder="Notes"
-            className="w-full px-4 py-2 border rounded-md"
+            placeholder='Notes'
+            className='w-full px-4 py-2 border rounded-md'
             value={item.notes}
             onChange={(e) => setItem({ ...item, notes: e.target.value })}
           />
-
+          <label htmlFor=''> URL</label>
           <input
-            type="url"
-            placeholder="URL"
-            className="w-full px-4 py-2 border rounded-md"
+            type='url'
+            placeholder='URL'
+            className='w-full px-4 py-2 border rounded-md'
             value={item.url}
             onChange={(e) => setItem({ ...item, url: e.target.value })}
           />
-
+          <label htmlFor=''> Username</label>
           <input
-            type="text"
-            placeholder="Username"
-            className="w-full px-4 py-2 border rounded-md"
+            type='text'
+            placeholder='Username'
+            className='w-full px-4 py-2 border rounded-md'
             value={item.username}
             onChange={(e) => setItem({ ...item, username: e.target.value })}
             required
           />
-
+          <label htmlFor=''> Password</label>
           <input
-            type="password"
-            placeholder="Password"
-            className="w-full px-4 py-2 border rounded-md"
+            type='password'
+            placeholder='Password'
+            className='w-full px-4 py-2 border rounded-md'
             value={item.password}
             onChange={(e) => setItem({ ...item, password: e.target.value })}
             required
           />
-
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white px-4 py-2 rounded-md"
-          >
-            Update Item
-          </button>
+          <div>
+            <button
+              type='submit'
+              className='w-full bg-blue-500 text-white px-4 py-2 rounded-md'>
+              Update Item
+            </button>
+            <button
+              onClick={() => navigate('/items')}
+              className='mt-4 text-blue-500 text-center w-full'>
+              Cancel
+            </button>
+          </div>
         </form>
-
-        <button
-          onClick={() => navigate("/items")}
-          className="mt-4 text-blue-500 text-center w-full"
-        >
-          Cancel
-        </button>
       </div>
     </div>
   );
