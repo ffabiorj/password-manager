@@ -1,9 +1,10 @@
-from rest_framework import status
 from django.contrib.auth.models import User
-from .models import PasswordEntry
 from django.urls import reverse
-from rest_framework.test import APITestCase
+from rest_framework import status
 from rest_framework.authtoken.models import Token
+from rest_framework.test import APITestCase
+
+from .models import PasswordEntry
 
 
 class RegisterUserTestCase(APITestCase):
@@ -54,7 +55,7 @@ class PasswordEntryTestCase(APITestCase):
         )
 
         self.valid_data = {
-            "user": self.user.id,
+            # "user": self.user.id,
             "name": "test",
             "icon": "https://example.com/new-icon.png",
             "notes": "Updated notes",
@@ -128,7 +129,6 @@ class PasswordEntryTestCase(APITestCase):
     def test_update_password_entry(self):
         url = reverse("passwords:password", kwargs={"pk": self.password.id})
         updated_data = {
-            "user": self.user.id,
             "name": "test3",
             "icon": "https://example.com/updated-icon.png",
             "notes": "Updated sample notes",
