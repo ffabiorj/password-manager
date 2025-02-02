@@ -7,19 +7,20 @@ Development tools:
 - Docker
 
 
+
 ## How to use on CodeSpace
- 
+#### Obs: Please note the password reset function does not work on CodeSpace, only in local machine with Docker.
+
 1. Create an enviroment with Python.
 2. Activate the enviroment.
 3. Install the dependencies.
 4. Execute the env_gen.
 5. Run the migration.
-6. Create a container docker (need to reset the password).
-7. Run the project.
-8. Enter in the folder named frontend (in another terminal).
-9. Install the dependencies.
-10. Run the server.
-11. Acess the link from the terminal or type the link.
+6. Run the project.
+7. Enter in the folder named frontend (in another terminal).
+8. Install the dependencies.
+9. Run the server.
+10. Acess the link from the terminal or type the link.
 
 ```
 python3 -m venv .venv
@@ -27,7 +28,6 @@ sourch .venv/bin/activate
 pip install -r requirements.txt
 python contrib/env_gen.py
 python manage.py migrate
-docker run -d -p 1025:1025 -p 8025:8025 mailhog/mailhog
 python manage.py runserver
 cd frontend
 npm install
@@ -44,7 +44,12 @@ http://localhost:5173/
 5. Install the dependencies.
 6. Execute the env_gen.
 7. Run the migration.
-8. Run the project.
+8. Create a container docker (need to reset the password).
+9. Run the project.
+10. Enter in the folder named frontend (in another terminal).
+11. Install the dependencies.
+12. Run the server.
+11. Acess the link from the terminal or type the link.
 
 ```
 git clone git@github.com:ffabiorj/password-manager.git
@@ -54,7 +59,12 @@ sourch .venv/bin/activate
 pip install -r requirements.txt
 python env_gen.py
 python manage.py migrate
+docker run -d -p 1025:1025 -p 8025:8025 mailhog/mailhog
 python manage.py runserver
+cd frontend
+npm install
+npm run dev
+http://localhost:5173/
 
 ```
 
