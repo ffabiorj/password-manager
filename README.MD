@@ -49,7 +49,8 @@ http://localhost:5173/
 10. Enter in the folder named frontend (in another terminal).
 11. Install the dependencies.
 12. Run the server.
-11. Acess the link from the terminal or type the link.
+13. Acess the link from the terminal or type the link.
+14. Acess the link to see the email
 
 ```
 git clone git@github.com:ffabiorj/password-manager.git
@@ -65,6 +66,7 @@ cd frontend
 npm install
 npm run dev
 http://localhost:5173/
+http://localhost:8025/
 
 ```
 
