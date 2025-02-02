@@ -152,15 +152,16 @@ elif len(sys.argv) > 0 and sys.argv[1] != "collectstatic":
         "default": dj_database_url.parse(os.environ.get("DATABASE_URL")),
     }
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = os.getenv("EMAIL_HOST", "0.0.0.0")
-EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", False)
-EMAIL_PORT = os.getenv("EMAIL_PORT", 1025)
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
-DEFAULT_FROM_EMAIL = "password@password.com"
-DOMAIN = os.getenv("DOMAIN")
-SITE_NAME = "Password Manager"
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# EMAIL_HOST = os.getenv("EMAIL_HOST", "0.0.0.0")
+# EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", False)
+# EMAIL_PORT = os.getenv("EMAIL_PORT", 1025)
+# EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
+# EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
+# DEFAULT_FROM_EMAIL = "password@password.com"
+# DOMAIN = os.getenv("DOMAIN")
+# SITE_NAME = "Password Manager"
 
 
 # Password validation
