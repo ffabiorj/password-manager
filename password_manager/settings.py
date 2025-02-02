@@ -10,10 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-from datetime import timedelta
-from pathlib import Path
 import os
 import sys
+from datetime import timedelta
+from pathlib import Path
+
 import dj_database_url
 from django.core.management.utils import get_random_secret_key
 
@@ -48,9 +49,22 @@ INSTALLED_APPS = [
     "corsheaders",
     "passwords",
     "drf_yasg",
+    "djoser",
 ]
 
-CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
@@ -61,6 +75,22 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+DJOSER = {
+    "PASSWORD_RESET_CONFIRM_URL": "password/reset/confirm/{uid}/{token}",
+    "PASSWORD_RESET_CONFIRM_RETYPE": True,
+    "EMAIL_FRONTEND_DOMAIN": "localhost:5173",
+}
+
+CSRF_COOKIE_SAMESITE = "None"  # Allow cross-site requests
+CSRF_COOKIE_SECURE = (
+    True  # Required for "SameSite=None" (must use HTTPS in production)
+)
+CSRF_COOKIE_HTTPONLY = False  # Allow JavaScript to read the CSRF token
+CSRF_COOKIE_NAME = "csrftoken"
+
+SESSION_COOKIE_SAMESITE = "None"  # Required if using Django sessions
+SESSION_COOKIE_SECURE = True  # Required for "SameSite=None"
+
 
 ROOT_URLCONF = "password_manager.urls"
 
@@ -121,7 +151,15 @@ elif len(sys.argv) > 0 and sys.argv[1] != "collectstatic":
         "default": dj_database_url.parse(os.environ.get("DATABASE_URL")),
     }
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = os.getenv("EMAIL_HOST", "0.0.0.0")
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", False)
+EMAIL_PORT = os.getenv("EMAIL_PORT", 1025)
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
+DEFAULT_FROM_EMAIL = "password@password.com"
+DOMAIN = os.getenv("DOMAIN")
+SITE_NAME = "Password Manager"
 
 
 # Password validation

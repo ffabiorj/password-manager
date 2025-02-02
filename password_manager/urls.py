@@ -85,5 +85,7 @@ urlpatterns = [
     path(
         "api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"
     ),
+    path("api/v1/", include("djoser.urls")),
+    path("api/v1/auth", include("djoser.urls.jwt")),
     path("admin/", admin.site.urls),
 ]

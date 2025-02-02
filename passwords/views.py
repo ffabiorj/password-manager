@@ -1,15 +1,25 @@
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
+from django.http import Http404, JsonResponse
+from django.http.request import QueryDict
+from django.middleware.csrf import get_token
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import status
-from django.http import Http404
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.tokens import AccessToken
+
 from .models import PasswordEntry
 from .serializers.passwords_serializer import PasswordEntrySerializer
-from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.authentication import JWTAuthentication
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
+
+
+def get_csrf_token(request):
+    response = JsonResponse({"csrfToken": get_token(request)})
+    response["Access-Control-Allow-Credentials"] = True  # Allow cookies
+    return response
 
 
 class RegisterView(APIView):
@@ -77,7 +87,6 @@ class PasswordEntryView(APIView):
     )
     def get(self, request):
         "Return a list of passwords"
-        page_number = request.GET.get("page", 1)
         search_query = self.request.query_params.get("search", None)
         if search_query:
             passwords = PasswordEntry.objects.filter(
@@ -85,13 +94,7 @@ class PasswordEntryView(APIView):
             )
         else:
             passwords = PasswordEntry.objects.filter(user=request.user)
-        paginator = Paginator(
-            passwords.order_by("id"), 5
-        )  # Show 5 items per page
-        password_list = paginator.get_page(page_number)
-        passwords_serializer = PasswordEntrySerializer(
-            password_list, many=True
-        )
+        passwords_serializer = PasswordEntrySerializer(passwords, many=True)
         return Response(passwords_serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -131,6 +134,11 @@ class PasswordEntryView(APIView):
     )
     def post(self, request):
         "Create a password entry"
+        token = request.META.get("HTTP_AUTHORIZATION").split(" ")[1]
+        user_id = AccessToken(token)["user_id"]
+        if isinstance(request.data, QueryDict):
+            request.data._mutable = True
+        request.data.update({"user": user_id})
         password_serializer = PasswordEntrySerializer(data=request.data)
         if password_serializer.is_valid():
             password_serializer.save()
@@ -138,7 +146,7 @@ class PasswordEntryView(APIView):
                 password_serializer.data, status=status.HTTP_201_CREATED
             )
         return Response(
-            password_serializer.errors, status=status.HTTP_401_BAD_REQUEST
+            password_serializer.errors, status=status.HTTP_400_BAD_REQUEST
         )
 
 
