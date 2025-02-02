@@ -8,31 +8,31 @@ Development tools:
 
 
 ## How to use on CodeSpace
-[https://glowing-spork-x475vjpwppfp9qq.github.dev/](CodeSpace)
-
  
 1. Create an enviroment with Python.
 2. Activate the enviroment.
 3. Install the dependencies.
 4. Execute the env_gen.
-5. Run the migrate.
-6. Run the project.
-7. Enter in the folder frontend (open other terminal)
-8. Install the dependencies.
-9. Run the start project
-10. Run the command to a create container (need to reset password)
+5. Run the migration.
+6. Create a container docker (need to reset the password).
+7. Run the project.
+8. Enter in the folder named frontend (in another terminal).
+9. Install the dependencies.
+10. Run the server.
+11. Acess the link from the terminal or type the link.
 
 ```
 python3 -m venv .venv
 sourch .venv/bin/activate
 pip install -r requirements.txt
-python env_gen.py
+python contrib/env_gen.py
 python manage.py migrate
+docker run -d -p 1025:1025 -p 8025:8025 mailhog/mailhog
 python manage.py runserver
 cd frontend
 npm install
 npm run dev
-docker run -d -p 1025:1025 -p 8025:8025 mailhog/mailhog
+http://localhost:5173/
 ```
 
 ## How to run locally:
@@ -43,7 +43,7 @@ docker run -d -p 1025:1025 -p 8025:8025 mailhog/mailhog
 4. Activate the enviroment.
 5. Install the dependencies.
 6. Execute the env_gen.
-7. Run the migrate.
+7. Run the migration.
 8. Run the project.
 
 ```
