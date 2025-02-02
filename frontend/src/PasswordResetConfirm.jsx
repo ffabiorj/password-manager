@@ -1,60 +1,79 @@
-import { useState } from 'react';
+import React, { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
 
-export default function PasswordResetRequest() {
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
+const ResetPasswordConfirm = () => {
+  const { uid, token } = useParams(); // Get uid & token from URL
+  const navigate = useNavigate();
+
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage('');
-    setError('');
+    setMessage("");
+    setError("");
+
+    if (newPassword !== confirmPassword) {
+      setError("Passwords do not match!");
+      return;
+    }
 
     try {
-      const response = await fetch(
-        'https://whale-app-mp29g.ondigitalocean.app/password-reset/',
+      const response = await axios.post(
+        "http://localhost:8000/api/v1/users/reset_password_confirm/",
         {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email }),
-        }
+          uid,
+          token,
+          new_password: newPassword,
+          re_new_password: confirmPassword,
+        },
       );
 
-      const data = await response.json();
-      if (response.ok) {
-        setMessage(data.message);
-      } else {
-        setError(data.error || 'Something went wrong.');
-      }
-    } catch {
-      setError('Failed to send request.');
+      setMessage("Password has been reset successfully! Redirecting...");
+      setTimeout(() => navigate("/login"), 3000); // Redirect after success
+    } catch (err) {
+      setError("Failed to reset password. Please try again.");
     }
   };
 
   return (
-    <div className='flex flex-col items-center justify-center min-h-screen bg-gray-100'>
-      <div className='w-full max-w-md p-6 bg-white rounded-lg shadow-md'>
-        <h2 className='text-xl font-semibold text-center mb-4'>
-          Reset Password
+    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+      <div className="bg-white p-6 rounded-lg shadow-md w-96">
+        <h2 className="text-2xl font-bold text-center mb-4">
+          Reset Your Password
         </h2>
-        <form onSubmit={handleSubmit} className='space-y-4'>
+        <form onSubmit={handleSubmit} className="space-y-4">
           <input
-            type='email'
-            className='w-full px-4 py-2 border rounded-lg'
-            placeholder='Enter your email'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            placeholder="New Password"
             required
+            className="w-full p-2 border rounded"
+          />
+          <input
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="Confirm New Password"
+            required
+            className="w-full p-2 border rounded"
           />
           <button
-            type='submit'
-            className='w-full bg-blue-500 text-white py-2 rounded-lg'>
-            Send Reset Link
+            type="submit"
+            className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition"
+          >
+            Reset Password
           </button>
         </form>
-        {message && <p className='mt-4 text-green-600'>{message}</p>}
-        {error && <p className='mt-4 text-red-600'>{error}</p>}
+        {message && <p className="text-green-500 mt-2">{message}</p>}
+        {error && <p className="text-red-500 mt-2">{error}</p>}
       </div>
     </div>
   );
-}
+};
+
+export default ResetPasswordConfirm;
